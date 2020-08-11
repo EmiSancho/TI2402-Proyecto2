@@ -143,6 +143,24 @@ int eliminarArista(listaAristas *A, char d[NOMBRE_SIZE]){
 	}
 }
 
+/**
+ * @brief      consulta si la arista existe dentro de la lista de aristas
+ * @param      A     puntero a la lista de aristas
+ * @param      origen     char del nombre del origen de la arista a buscar
+ * @param      destino    char del nombre del destino de la arista a buscar
+ * @return     puntero a la arista buscada, si no la encuentra retorna NULL
+ */
+nodoArista* consultarArista(listaAristas *A, char origen[NOMBRE_SIZE], char destino[NOMBRE_SIZE]){
+	nodoArista *a = A->inicio;
+	while(a!=NULL){
+		if(strcmp(a->origen,origen)==0 && strcmp(a->destino,destino)==0){
+			return a;
+		}
+		a = a->siguiente;
+	}
+	printf("\n\t****ERROR****\n\t%s no existe como arista, por favor insertelo. \n", origen );
+	return NULL;
+}
 
 //--------------------------------------VERTICE
 
@@ -382,6 +400,19 @@ int etiquetasPermanentesCompletas(listaVertices *V){
 }
 
 /**
+ * @brief      recorre la lista de vertices cambiando los valores que se utilizan como etiqueta para el Djisktra
+ * @param      V     puntero a la lista de vertices
+ * @return     no aplica
+ */
+void limpiarEtiquetas(listaVertices *V){
+	for(nodoVertice *i = V->inicio; i!=NULL; i=i->siguiente){
+		i->pesoAcumulado = 0;
+		i->verticeAnterior = NULL;
+		i->etiqueta = 0;
+	}
+}
+
+/**
  * @brief      encuentra el camino mas corto a cada nodo apartir de un origen
  * @param      V       puntero a la lista de vertices
  * @param      origen char al nodo desde el cual se calculan los caminos mas cortos
@@ -396,6 +427,82 @@ void Djisktra(listaVertices *V, char origen[NOMBRE_SIZE]){
 		nodoVertice *menorVertice = buscarEtiquetaMenor(V);
 		Djisktra(V, menorVertice->nombre);
 	}
+}
+
+/**
+ * @brief      recorre una lista de vertices, busca la arista de este vertice al siguiente y suma el tiempo entre estos
+ * @param      V     puntero a la lista de vertices
+ * @return     int suma del total de tiempos entre vertices
+ */
+int obtenerTiempoTotalEnRuta(listaVertices *V){
+	int tiempoTotal = 0;
+	nodoArista *auxArista;
+	for(nodoVertice *i = V->inicio; i!=NULL; i=i->siguiente){
+		if(i->siguiente != NULL){
+			auxArista = consultarArista(i->aristas,i->nombre,i->siguiente->nombre);
+			tiempoTotal = tiempoTotal + auxArista->tiempo;
+		}
+	}
+	printf("%i\n", tiempoTotal );
+	return tiempoTotal;
+}
+
+/**
+ * @brief      recorre una lista de vertices, busca la arista de este vertice al siguiente y suma la distancia entre estos
+ * @param      V     puntero a la lista de vertices
+ * @return     int suma del total de distancias entre vertices
+ */
+int obtenerDistanciaTotalEnRuta(listaVertices *V){
+	int distanciaTotal = 0;
+	nodoArista *auxArista;
+	for(nodoVertice *i = V->inicio; i!=NULL; i=i->siguiente){
+		if(i->siguiente != NULL){
+			auxArista = consultarArista(i->aristas,i->nombre,i->siguiente->nombre);
+			distanciaTotal = distanciaTotal + auxArista->distancia;
+		}
+	}
+	printf("%i\n", distanciaTotal );
+	return distanciaTotal;
+	
+}
+
+/**
+ * @brief      calcula la ruta de vertices que hay que seguir para llegar de un nodo A a un nodo B
+ * @param      V        puntero a la lista de vertices
+ * @param      origen   vertice origen de la ruta
+ * @param      destino  vertice destino de la ruta
+ * @return     puntero a la lista de vertices que contiene la ruta
+ */
+listaVertices* mostrarRuta(listaVertices *V, char origen[NOMBRE_SIZE], char destino[NOMBRE_SIZE]){
+	nodoVertice *aux =	consultarVertice(V,destino);
+	listaVertices *auxRuta = listaVerticesNueva();
+	listaVertices *ruta = listaVerticesNueva();
+	while(aux!=NULL){
+		insertarVertice(auxRuta,*aux);
+		aux = aux->verticeAnterior;
+	}
+
+	aux = auxRuta->inicio;
+	while(aux!=NULL){
+		if(aux->siguiente == NULL){
+			insertarVertice(ruta,*aux);
+			eliminarVertice(auxRuta, aux->nombre, aux->provincia);
+			aux = auxRuta->inicio;
+		}
+		aux = aux->siguiente;
+
+	}
+	free(auxRuta);
+	aux = consultarVertice(V,destino);
+	insertarVertice(ruta, *aux);
+
+	//---------------- borrar
+	mostrarVertices(ruta);
+	obtenerTiempoTotalEnRuta(ruta);
+	obtenerDistanciaTotalEnRuta(ruta);
+	//---------------------------------
+	
+	return ruta;
 }
 
 
@@ -503,16 +610,26 @@ int main()
 		printf("0\t Salir.\n");
 		printf("\nSeleccione una accion de menu realizar: ");
 		scanf("%i", &accion);
-			if(accion == 0 || accion > 5){
+			if(accion == 0 || accion > 6){
 				break;
 			}
 			
 			if(accion == 5){
-				
+				limpiarEtiquetas(V);
 				printf("\tInserte vertice origen del Dijkstra: ");
 				fgets(tempVertice.nombre, NOMBRE_SIZE, stdin);
 				scanf("%[^\n]", tempVertice.nombre);
 				Djisktra(V,tempVertice.nombre);
+			}
+
+			if(accion == 6){
+				printf("\tInserte el origen de la ruta: ");
+				fgets(tempArista.origen, NOMBRE_SIZE, stdin);
+				scanf("%[^\n]", tempArista.origen);
+				printf("\tInserte el destino de la ruta: ");
+				fgets(tempArista.destino, NOMBRE_SIZE, stdin);
+				scanf("%[^\n]", tempArista.destino);
+				mostrarRuta(V, tempArista.origen,tempArista.destino);
 			}
 
 			if(accion == 1){
