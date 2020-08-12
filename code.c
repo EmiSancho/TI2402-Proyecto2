@@ -92,7 +92,7 @@ void insertarArista(listaAristas *A, nodoArista a){
 void mostrarAristas(listaAristas *A){
 	
 	for(nodoArista *i = A->inicio; i!=NULL; i=i->siguiente){
-		printf("\t\t-> %s, tiempo: %i.\n", i->destino, i->tiempo);
+		printf("\t\t-> %s, tiempo: %i, distancia: %i.\n", i->destino, i->tiempo, i->distancia);
 	}
 }
 
@@ -498,8 +498,8 @@ listaVertices* mostrarRuta(listaVertices *V, char origen[NOMBRE_SIZE], char dest
 
 	//---------------- borrar
 	mostrarVertices(ruta);
-	obtenerTiempoTotalEnRuta(ruta);
-	obtenerDistanciaTotalEnRuta(ruta);
+	// obtenerTiempoTotalEnRuta(ruta);
+	// obtenerDistanciaTotalEnRuta(ruta);
 	//---------------------------------
 	
 	return ruta;
@@ -526,87 +526,107 @@ int main()
 	int simulacionesTren, simulacionesBus, simulacionesTaxi, simulacionesVehiculo = 0;
 	char origen[NOMBRE_SIZE];
 
-//--------------	EJEMPLOS 
-	{
-	listaAristas *g = listaAristasNueva(); 
-	listaAristas *u = listaAristasNueva();
-	listaAristas *lc = listaAristasNueva();
-	listaAristas *t = listaAristasNueva();
-	listaAristas *sc = listaAristasNueva();
-	listaAristas *p = listaAristasNueva();
-	listaAristas *sr = listaAristasNueva();
-	listaAristas *lf = listaAristasNueva();
-	
-	nodoVertice gv;
-	nodoVertice uv;
-	nodoVertice lcv;
-	nodoVertice tv;
-	nodoVertice scv;
-	nodoVertice pv;
-	nodoVertice srv;
-	nodoVertice lfv;
+//--------------	GRAFO PRE CARGADO
+	listaAristas *aCoruna  = listaAristasNueva();
+	listaAristas *aVigo  = listaAristasNueva();
+	listaAristas *aOviedo = listaAristasNueva();
+	listaAristas *aValladolid = listaAristasNueva();
+	listaAristas *aBilbao = listaAristasNueva();
+	listaAristas *aZaragoza = listaAristasNueva(); 
+	listaAristas *aMadrid = listaAristasNueva(); 
+	listaAristas *aBadajoz = listaAristasNueva(); 
+	listaAristas *aCadiz = listaAristasNueva();
+	listaAristas *aSevilla = listaAristasNueva(); 
+	listaAristas *aJaen = listaAristasNueva(); 
+	listaAristas *aGranada = listaAristasNueva();
+	listaAristas *aMurcia = listaAristasNueva(); 
+	listaAristas *aAlbacete = listaAristasNueva(); 
+	listaAristas *aValencia = listaAristasNueva(); 
+	listaAristas *aBarcelona = listaAristasNueva(); 
+	listaAristas *aGerona = listaAristasNueva();
 
-	strcpy(gv.nombre,"Guatuso"); strcpy(gv.provincia,"Alajuela"); gv.poblacion = 12000; gv.aristas = g;
-	strcpy(uv.nombre,"Upala"); strcpy(uv.provincia,"Alajuela"); uv.poblacion = 13000; uv.aristas = u;
-	strcpy(lcv.nombre,"Los Chiles"); strcpy(lcv.provincia,"Alajuela"); lcv.poblacion = 14000; lcv.aristas = lc; 
-	strcpy(tv.nombre,"Tilaran"); strcpy(tv.provincia,"Guanacaste"); tv.poblacion = 15000; tv.aristas = t;
-	strcpy(scv.nombre,"San Carlos"); strcpy(scv.provincia,"Alajuela"); scv.poblacion = 16000; scv.aristas = sc;
-	strcpy(pv.nombre,"Pital"); strcpy(pv.provincia,"Alajuela"); pv.poblacion = 17000; pv.aristas = p;
-	strcpy(srv.nombre,"San Ramon"); strcpy(srv.provincia,"Alajuela"); srv.poblacion = 18000; srv.aristas = sr;
-	strcpy(lfv.nombre,"La Fortuna"); strcpy(lfv.provincia,"Alajuela"); lfv.poblacion = 19000; lfv.aristas = lf;
+	nodoVertice coruna, vigo, oviedo, valladolid, bilbao, zaragoza, madrid, badajoz, cadiz, sevilla, jaen, granada, murcia, albacete, valencia, barcelona, gerona; 
 
-	insertarVertice(V,gv);
-	insertarVertice(V,uv);
-	insertarVertice(V,lcv);
-	insertarVertice(V,tv);
-	insertarVertice(V,scv);
-	insertarVertice(V,pv);
-	insertarVertice(V,srv);
-	insertarVertice(V,lfv);
+	strcpy(coruna.nombre,"Coruña"); strcpy(coruna.provincia,"A Coruña"); coruna.poblacion = 1147223; coruna.aristas = aCoruna;
+	strcpy(vigo.nombre,"Vigo"); strcpy(vigo.provincia,"Pontevedra"); vigo.poblacion = 963711; vigo.aristas = aVigo;
+	strcpy(oviedo.nombre,"Oviedo"); strcpy(oviedo.provincia,"Asturias"); oviedo.poblacion = 1081373; oviedo.aristas = aOviedo;
+	strcpy(valladolid.nombre,"Valladolid"); strcpy(valladolid.provincia,"Valladolid"); valladolid.poblacion = 534098; valladolid.aristas = aValladolid;
+	strcpy(bilbao.nombre,"Bilbao"); strcpy(bilbao.provincia,"Vizcaya"); bilbao.poblacion = 1155622; bilbao.aristas = aBilbao;
+	strcpy(zaragoza.nombre,"Zaragoza"); strcpy(zaragoza.provincia,"Zaragoza"); zaragoza.poblacion = 973111; zaragoza.aristas = aZaragoza;
+	strcpy(madrid.nombre,"Madrid"); strcpy(madrid.provincia,"Madrid"); madrid.poblacion = 6489578; madrid.aristas = aMadrid;
+	strcpy(badajoz.nombre,"Badajoz"); strcpy(badajoz.provincia,"Badajoz"); badajoz.poblacion = 693271; badajoz.aristas = aBadajoz;
+	strcpy(cadiz.nombre,"Cadiz"); strcpy(cadiz.provincia,"Cadiz"); cadiz.poblacion = 1243091; cadiz.aristas = aCadiz;
+	strcpy(sevilla.nombre,"Sevilla"); strcpy(sevilla.provincia,"Sevilla"); sevilla.poblacion = 1928123; sevilla.aristas = aSevilla;
+	strcpy(jaen.nombre,"Jaen"); strcpy(jaen.provincia,"Jaen"); jaen.poblacion = 670594; jaen.aristas = aJaen;
+	strcpy(granada.nombre,"Granada"); strcpy(granada.provincia,"Granada"); granada.poblacion = 924927; granada.aristas = aGranada;
+	strcpy(murcia.nombre,"Murcia"); strcpy(murcia.provincia,"Murcia"); murcia.poblacion = 1470982; murcia.aristas = aMurcia;
+	strcpy(albacete.nombre,"Albacete"); strcpy(albacete.provincia,"Albacete"); albacete.poblacion = 402746; albacete.aristas = aAlbacete;
+	strcpy(valencia.nombre,"Valencia"); strcpy(valencia.provincia,"Valencia"); valencia.poblacion = 2578134; valencia.aristas = aValencia;
+	strcpy(barcelona.nombre,"Barcelona"); strcpy(barcelona.provincia,"Barcelona"); barcelona.poblacion = 5529121; barcelona.aristas = aBarcelona;
+	strcpy(gerona.nombre,"Gerona"); strcpy(gerona.provincia,"Gerona"); gerona.poblacion = 756212; gerona.aristas = aGerona;
 
-	nodoArista g_t; strcpy(g_t.origen,"Guatuso"); strcpy(g_t.destino,"Tilaran"); g_t.tiempo = 10; g_t.distancia = 80; 
-	nodoArista g_u; strcpy(g_u.origen,"Guatuso"); strcpy(g_u.destino,"Upala"); g_u.tiempo = 5; g_u.distancia = 40;
-	nodoArista t_lc; strcpy(t_lc.origen,"Tilaran"); strcpy(t_lc.destino,"Los Chiles"); t_lc.tiempo = 6; t_lc.distancia = 120;
-	nodoArista t_sc; strcpy(t_sc.origen,"Tilaran"); strcpy(t_sc.destino,"San Carlos"); t_sc.tiempo = 9; t_lc.distancia = 90;
-	nodoArista t_sr; strcpy(t_sr.origen,"Tilaran"); strcpy(t_sr.destino,"San Ramon"); t_sr.tiempo = 14; t_lc.distancia = 60;
-	nodoArista sr_g; strcpy(sr_g.origen,"San Ramon"); strcpy(sr_g.destino,"Guatuso"); sr_g.tiempo = 2; sr_g.distancia = 95;
-	nodoArista sr_lf; strcpy(sr_lf.origen,"San Ramon"); strcpy(sr_lf.destino,"La Fortuna"); sr_lf.tiempo = 12; sr_lf.distancia = 35;
-	nodoArista sc_g; strcpy(sc_g.origen,"San Carlos"); strcpy(sc_g.destino,"Guatuso"); sc_g.tiempo = 3; sc_g.distancia = 80;
-	nodoArista sc_p; strcpy(sc_p.origen,"San Carlos"); strcpy(sc_p.destino,"Pital"); sc_p.tiempo = 4; sc_p.distancia = 40;
-	nodoArista sc_sr; strcpy(sc_sr.origen,"San Carlos"); strcpy(sc_sr.destino,"San Ramon"); sc_sr.tiempo = 9; sc_sr.distancia = 30;
-	nodoArista u_sc; strcpy(u_sc.origen,"Upala"); strcpy(u_sc.destino,"San Carlos"); u_sc.tiempo = 5; u_sc.distancia = 120;
-	nodoArista u_lf; strcpy(u_lf.origen,"Upala"); strcpy(u_lf.destino,"La Fortuna"); u_lf.tiempo = 9; u_lf.distancia = 85;
-	nodoArista u_lc; strcpy(u_lc.origen,"Upala"); strcpy(u_lc.destino,"Los Chiles"); u_lc.tiempo = 7; u_lc.distancia = 15;
-	nodoArista lf_sc; strcpy(lf_sc.origen,"La Fortuna"); strcpy(lf_sc.destino,"San Carlos"); lf_sc.tiempo = 6; lf_sc.distancia = 30;
-	nodoArista p_u; strcpy(p_u.origen,"Pital"); strcpy(p_u.destino,"Upala"); p_u.tiempo = 1; p_u.distancia = 150;
-	nodoArista p_lf; strcpy(p_lf.origen,"Pital"); strcpy(p_lf.destino,"La Fortuna"); p_lf.tiempo = 15; p_lf.distancia = 70;
-	nodoArista lc_p; strcpy(lc_p.origen,"Los Chiles"); strcpy(lc_p.destino,"Pital"); lc_p.tiempo = 3; lc_p.distancia = 45;
-
-	insertarArista(gv.aristas, g_t);
-	insertarArista(gv.aristas, g_u);
-	insertarArista(tv.aristas, t_lc);
-	insertarArista(tv.aristas, t_sc);
-	insertarArista(tv.aristas, t_sr);
-	insertarArista(srv.aristas, sr_g);
-	insertarArista(srv.aristas, sr_lf);
-	insertarArista(scv.aristas, sc_g);
-	insertarArista(scv.aristas, sc_p);
-	insertarArista(scv.aristas, sc_sr);
-	insertarArista(uv.aristas, u_sc);
-	insertarArista(uv.aristas, u_lf);
-	insertarArista(uv.aristas, u_lc);
-	insertarArista(lfv.aristas, lf_sc);
-	insertarArista(pv.aristas, p_u);
-	insertarArista(pv.aristas, p_lf);
-	insertarArista(lcv.aristas, lc_p);
-	}
+	insertarVertice(V,coruna); insertarVertice(V,vigo); insertarVertice(V,oviedo); insertarVertice(V,valladolid); insertarVertice(V,bilbao); insertarVertice(V,zaragoza); insertarVertice(V,madrid);
+	insertarVertice(V,badajoz); insertarVertice(V,cadiz); insertarVertice(V,sevilla); insertarVertice(V,jaen); insertarVertice(V,granada); insertarVertice(V,murcia); insertarVertice(V,albacete);
+	insertarVertice(V,valencia); insertarVertice(V,barcelona); insertarVertice(V,gerona);
+		
+	nodoArista auxArista;
+	strcpy(auxArista.origen,"Coruña"); strcpy(auxArista.destino,"Vigo"); auxArista.tiempo = 45; auxArista.distancia = 171; insertarArista(coruna.aristas, auxArista);
+	strcpy(auxArista.origen,"Coruña"); strcpy(auxArista.destino,"Valladolid"); auxArista.tiempo = 310; auxArista.distancia = 455; insertarArista(coruna.aristas, auxArista);
+	strcpy(auxArista.origen,"Vigo"); strcpy(auxArista.destino,"Coruña"); auxArista.tiempo = 45; auxArista.distancia = 171; insertarArista(vigo.aristas, auxArista);
+	strcpy(auxArista.origen,"Vigo"); strcpy(auxArista.destino,"Valladolid"); auxArista.tiempo = 160; auxArista.distancia = 356; insertarArista(vigo.aristas, auxArista);
+	strcpy(auxArista.origen,"Valladolid"); strcpy(auxArista.destino,"Coruña"); auxArista.tiempo = 310; auxArista.distancia = 455; insertarArista(valladolid.aristas, auxArista);
+	strcpy(auxArista.origen,"Valladolid"); strcpy(auxArista.destino,"Vigo"); auxArista.tiempo = 160; auxArista.distancia = 356; insertarArista(valladolid.aristas, auxArista);
+	strcpy(auxArista.origen,"Valladolid"); strcpy(auxArista.destino,"Bilbao"); auxArista.tiempo = 150; auxArista.distancia = 280; insertarArista(valladolid.aristas, auxArista);
+	strcpy(auxArista.origen,"Valladolid"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 70; auxArista.distancia = 193; insertarArista(valladolid.aristas, auxArista);
+	strcpy(auxArista.origen,"Oviedo"); strcpy(auxArista.destino,"Bilbao"); auxArista.tiempo = 120; auxArista.distancia = 304; insertarArista(oviedo.aristas, auxArista);
+	strcpy(auxArista.origen,"Bilbao"); strcpy(auxArista.destino,"Oviedo"); auxArista.tiempo = 120; auxArista.distancia = 304; insertarArista(bilbao.aristas, auxArista);
+	strcpy(auxArista.origen,"Bilbao"); strcpy(auxArista.destino,"Valladolid"); auxArista.tiempo = 150; auxArista.distancia = 280; insertarArista(bilbao.aristas, auxArista);
+	strcpy(auxArista.origen,"Bilbao"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 190; auxArista.distancia = 395; insertarArista(bilbao.aristas, auxArista);
+	strcpy(auxArista.origen,"Bilbao"); strcpy(auxArista.destino,"Zaragoza"); auxArista.tiempo = 140; auxArista.distancia = 324; insertarArista(bilbao.aristas, auxArista);
+	strcpy(auxArista.origen,"Badajoz"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 310; auxArista.distancia = 403; insertarArista(badajoz.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Valladolid"); auxArista.tiempo = 70; auxArista.distancia = 193; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Bilbao"); auxArista.tiempo = 190; auxArista.distancia = 395; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Zaragoza"); auxArista.tiempo = 141; auxArista.distancia = 325; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Albacete"); auxArista.tiempo = 110; auxArista.distancia = 251; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Jaen"); auxArista.tiempo = 24; auxArista.distancia = 335; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Madrid"); strcpy(auxArista.destino,"Badajoz"); auxArista.tiempo = 310; auxArista.distancia = 403; insertarArista(madrid.aristas, auxArista);
+	strcpy(auxArista.origen,"Cadiz"); strcpy(auxArista.destino,"Sevilla"); auxArista.tiempo = 90; auxArista.distancia = 125; insertarArista(cadiz.aristas, auxArista);
+	strcpy(auxArista.origen,"Sevilla"); strcpy(auxArista.destino,"Cadiz"); auxArista.tiempo = 90; auxArista.distancia = 125; insertarArista(sevilla.aristas, auxArista);
+	strcpy(auxArista.origen,"Sevilla"); strcpy(auxArista.destino,"Jaen"); auxArista.tiempo = 60; auxArista.distancia = 242; insertarArista(sevilla.aristas, auxArista);
+	strcpy(auxArista.origen,"Sevilla"); strcpy(auxArista.destino,"Granada"); auxArista.tiempo = 103; auxArista.distancia = 256; insertarArista(sevilla.aristas, auxArista);
+	strcpy(auxArista.origen,"Jaen"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 24; auxArista.distancia = 335; insertarArista(jaen.aristas, auxArista);
+	strcpy(auxArista.origen,"Jaen"); strcpy(auxArista.destino,"Granada"); auxArista.tiempo = 13; auxArista.distancia = 99; insertarArista(jaen.aristas, auxArista);
+	strcpy(auxArista.origen,"Jaen"); strcpy(auxArista.destino,"Sevilla"); auxArista.tiempo = 60; auxArista.distancia = 242; insertarArista(jaen.aristas, auxArista);
+	strcpy(auxArista.origen,"Granada"); strcpy(auxArista.destino,"Jaen"); auxArista.tiempo = 13; auxArista.distancia = 99; insertarArista(granada.aristas, auxArista);
+	strcpy(auxArista.origen,"Granada"); strcpy(auxArista.destino,"Murcia"); auxArista.tiempo = 130; auxArista.distancia = 278; insertarArista(granada.aristas, auxArista);
+	strcpy(auxArista.origen,"Granada"); strcpy(auxArista.destino,"Sevilla"); auxArista.tiempo = 103; auxArista.distancia = 256; insertarArista(granada.aristas, auxArista);
+	strcpy(auxArista.origen,"Albacete"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 110; auxArista.distancia = 251; insertarArista(albacete.aristas, auxArista);
+	strcpy(auxArista.origen,"Albacete"); strcpy(auxArista.destino,"Valencia"); auxArista.tiempo = 70; auxArista.distancia = 191; insertarArista(albacete.aristas, auxArista);
+	strcpy(auxArista.origen,"Albacete"); strcpy(auxArista.destino,"Murcia"); auxArista.tiempo = 12; auxArista.distancia = 150; insertarArista(albacete.aristas, auxArista);
+	strcpy(auxArista.origen,"Murcia"); strcpy(auxArista.destino,"Albacete"); auxArista.tiempo = 12; auxArista.distancia = 150; insertarArista(murcia.aristas, auxArista);
+	strcpy(auxArista.origen,"Murcia"); strcpy(auxArista.destino,"Valencia"); auxArista.tiempo = 220; auxArista.distancia = 241; insertarArista(murcia.aristas, auxArista);
+	strcpy(auxArista.origen,"Murcia"); strcpy(auxArista.destino,"Granada"); auxArista.tiempo = 130; auxArista.distancia = 278; insertarArista(murcia.aristas, auxArista);
+	strcpy(auxArista.origen,"Valencia"); strcpy(auxArista.destino,"Barcelona"); auxArista.tiempo = 120; auxArista.distancia = 349; insertarArista(valencia.aristas, auxArista);
+	strcpy(auxArista.origen,"Valencia"); strcpy(auxArista.destino,"Murcia"); auxArista.tiempo = 220; auxArista.distancia = 241; insertarArista(valencia.aristas, auxArista);
+	strcpy(auxArista.origen,"Valencia"); strcpy(auxArista.destino,"Albacete"); auxArista.tiempo = 70; auxArista.distancia = 191; insertarArista(valencia.aristas, auxArista);
+	strcpy(auxArista.origen,"Zaragoza"); strcpy(auxArista.destino,"Bilbao"); auxArista.tiempo = 140; auxArista.distancia = 324; insertarArista(zaragoza.aristas, auxArista);
+	strcpy(auxArista.origen,"Zaragoza"); strcpy(auxArista.destino,"Madrid"); auxArista.tiempo = 141; auxArista.distancia = 325; insertarArista(zaragoza.aristas, auxArista);
+	strcpy(auxArista.origen,"Zaragoza"); strcpy(auxArista.destino,"Barcelona"); auxArista.tiempo = 80; auxArista.distancia = 296; insertarArista(zaragoza.aristas, auxArista);
+	strcpy(auxArista.origen,"Barcelona"); strcpy(auxArista.destino,"Zaragoza"); auxArista.tiempo = 80; auxArista.distancia = 296; insertarArista(barcelona.aristas, auxArista);
+	strcpy(auxArista.origen,"Barcelona"); strcpy(auxArista.destino,"Gerona"); auxArista.tiempo = 24; auxArista.distancia = 100; insertarArista(barcelona.aristas, auxArista);
+	strcpy(auxArista.origen,"Barcelona"); strcpy(auxArista.destino,"Valencia"); auxArista.tiempo = 120; auxArista.distancia = 349; insertarArista(barcelona.aristas, auxArista);
+	strcpy(auxArista.origen,"Gerona"); strcpy(auxArista.destino,"Barcelona"); auxArista.tiempo = 24; auxArista.distancia = 100; insertarArista(gerona.aristas, auxArista);
 //-----------------------------------------------------
+	
+
 	while(free){
 		printf("\n*** Menu principal: *** \n");
 		printf("1\t Construcion y edicion del grafo\n");
 		printf("2\t Configuracion inicial\n");
 		printf("3\t Simulacion\n");
 		printf("4\t Estadisticas\n");
+		printf("5\t Djisktra\n");
+		printf("6\t Ruta\n");
 		printf("0\t Salir.\n");
 		printf("\nSeleccione una accion de menu realizar: ");
 		scanf("%i", &accion);
